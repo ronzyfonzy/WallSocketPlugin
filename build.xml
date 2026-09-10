@@ -1,0 +1,23 @@
+<project name="WallSocketPlugin" default="package" basedir=".">
+  <property name="sh3d.jar" location="/Applications/Sweet Home 3D.app/Contents/app/SweetHome3D.jar"/>
+  <property name="build.dir" location="build"/>
+  <property name="classes.dir" location="${build.dir}/classes"/>
+  <property name="dist.file" location="${build.dir}/WallSocketPlugin.sh3p"/>
+
+  <target name="clean">
+    <delete dir="${build.dir}"/>
+  </target>
+
+  <target name="compile" depends="clean">
+    <mkdir dir="${classes.dir}"/>
+    <javac srcdir="src" destdir="${classes.dir}" classpath="${sh3d.jar}"
+           release="8" includeantruntime="false" debug="true"/>
+    <copy todir="${classes.dir}">
+      <fileset dir="resources"/>
+    </copy>
+  </target>
+
+  <target name="package" depends="compile">
+    <jar destfile="${dist.file}" basedir="${classes.dir}"/>
+  </target>
+</project>
