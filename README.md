@@ -20,6 +20,27 @@ ready-to-use wall socket into your home plan.
   black, anthracite, aluminium, champagne, cream).
 - **Live 3D preview** in the configuration dialog.
 - **Undo/redo** support and **German localization**.
+- **Config metadata** — each created socket stores its configuration as first-class
+  piece properties (see below), ready for downstream export.
+
+## Reading the configuration
+
+Every socket records its setup as properties on the `HomePieceOfFurniture`
+(accessible via `getProperty(name)` / `getPropertyNames()`), so it persists in the
+`.sh3d` file and can be exported programmatically:
+
+| Property                  | Example value            |
+| ------------------------- | ------------------------ |
+| `wallsocket.type`         | `wall-socket`            |
+| `wallsocket.standard`     | `SCHUKO`                 |
+| `wallsocket.frameFinish`  | `ANTHRACITE`             |
+| `wallsocket.insertFinish` | `WHITE`                  |
+| `wallsocket.gangCount`    | `2`                      |
+| `wallsocket.gang.1`       | `SOCKET`                 |
+| `wallsocket.gang.2`       | `RJ45_H+ROCKER_H`        |
+
+Per-gang values are a `+`-joined list of insert tokens; `_H` marks a half-width insert.
+Enum names are locale-independent.
 
 ## How it works
 
