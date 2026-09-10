@@ -242,14 +242,17 @@ public final class SocketModel {
       case GENERIC: {
         // simple round two-pin socket, no ground contacts
         o.useMaterial("Insert");
-        o.cylinderZ(0, 0, 0.4f, half ? 1.2f : 2.25f, 0.2f, 32);
-        o.useMaterial("Hole");
         if (half) {
-          o.disc(0, 0.45f, 0.51f, 0.24f, 24);
-          o.disc(0, -0.45f, 0.51f, 0.24f, 24);
+          // flat face with vertical pins
+          o.useMaterial("Hole");
+          o.disc(0, 0.45f, 0.31f, 0.24f, 24);
+          o.disc(0, -0.45f, 0.31f, 0.24f, 24);
         } else {
-          o.disc(0.95f, 0, 0.51f, 0.24f, 24);
-          o.disc(-0.95f, 0, 0.51f, 0.24f, 24);
+          // recessed collar with horizontal pins
+          o.tube(0, 0, 0.4f, 2.25f, 1.8f, 0.2f, 40);
+          o.useMaterial("Hole");
+          o.disc(0.95f, 0, 0.31f, 0.24f, 24);
+          o.disc(-0.95f, 0, 0.31f, 0.24f, 24);
         }
         break;
       }
@@ -257,23 +260,20 @@ public final class SocketModel {
       default: {
         o.useMaterial("Insert");
         if (half) {
-          // narrow socket: vertical pins, ground clips left/right
-          o.cylinderZ(0, 0, 0.4f, 1.2f, 0.2f, 32);
+          // narrow socket: flat face with vertical pins (2-pin euro style, no earth)
           o.useMaterial("Hole");
-          o.disc(0, 0.45f, 0.51f, 0.24f, 24);
-          o.disc(0, -0.45f, 0.51f, 0.24f, 24);
-          o.useMaterial("Metal");
-          o.box(1.2f, 0, 0.4f, 0.15f, 1.0f, 0.2f);
-          o.box(-1.2f, 0, 0.4f, 0.15f, 1.0f, 0.2f);
+          o.disc(0, 0.45f, 0.31f, 0.24f, 24);
+          o.disc(0, -0.45f, 0.31f, 0.24f, 24);
         } else {
-          // full socket: horizontal pins, ground clips top/bottom
-          o.cylinderZ(0, 0, 0.4f, 2.25f, 0.2f, 32);
+          // full socket: recessed collar, horizontal pins, ground clips top/bottom
+          o.tube(0, 0, 0.4f, 2.25f, 1.8f, 0.2f, 40);
           o.useMaterial("Hole");
-          o.disc(0.95f, 0, 0.51f, 0.24f, 24);
-          o.disc(-0.95f, 0, 0.51f, 0.24f, 24);
+          o.disc(0.95f, 0, 0.31f, 0.24f, 24);
+          o.disc(-0.95f, 0, 0.31f, 0.24f, 24);
+          o.disc(0, 0, 0.31f, 0.12f, 20);
           o.useMaterial("Metal");
-          o.box(0, 2.1f, 0.4f, 1.6f, 0.15f, 0.2f);
-          o.box(0, -2.1f, 0.4f, 1.6f, 0.15f, 0.2f);
+          o.box(0, 1.9f, 0.37f, 1.0f, 0.12f, 0.15f);
+          o.box(0, -1.9f, 0.37f, 1.0f, 0.12f, 0.15f);
         }
         break;
       }

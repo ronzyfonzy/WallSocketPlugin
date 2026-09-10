@@ -43,6 +43,79 @@ public class ObjWriter {
     prism(circle(cx, cy, r, segments), cz - depth / 2f, cz + depth / 2f);
   }
 
+  /** Hollow cylinder (tube / ring) along Z, centered at (cx, cy, cz). */
+  public void tube(float cx, float cy, float cz, float outerR, float innerR,
+                   float depth, int segments) {
+    float z0 = cz - depth / 2f, z1 = cz + depth / 2f;
+    int n = segments;
+    float[][] outer = new float[n][2];
+    float[][] inner = new float[n][2];
+    for (int i = 0; i < n; i++) {
+      double a = 2 * Math.PI * i / n;
+      float ca = (float) Math.cos(a), sa = (float) Math.sin(a);
+      outer[i][0] = cx + outerR * ca;
+      outer[i][1] = cy + outerR * sa;
+      inner[i][0] = cx + innerR * ca;
+      inner[i][1] = cy + innerR * sa;
+    }
+    // top ring (z1), normal +Z
+    for (int i = 0; i < n; i++) {
+      int j = (i + 1) % n;
+      int b = vCount + 1;
+      emitVertex(outer[i][0], outer[i][1], z1);
+      emitVertex(outer[j][0], outer[j][1], z1);
+      emitVertex(inner[j][0], inner[j][1], z1);
+      emitVertex(inner[i][0], inner[i][1], z1);
+      emitNormal(0, 0, 1);
+      int nIdx = nCount;
+      face(b, b + 1, b + 2, nIdx);
+      face(b, b + 2, b + 3, nIdx);
+    }
+    // bottom ring (z0), normal -Z
+    for (int i = 0; i < n; i++) {
+      int j = (i + 1) % n;
+      int b = vCount + 1;
+      emitVertex(outer[i][0], outer[i][1], z0);
+      emitVertex(inner[i][0], inner[i][1], z0);
+      emitVertex(inner[j][0], inner[j][1], z0);
+      emitVertex(outer[j][0], outer[j][1], z0);
+      emitNormal(0, 0, -1);
+      int nIdx = nCount;
+      face(b, b + 1, b + 2, nIdx);
+      face(b, b + 2, b + 3, nIdx);
+    }
+    // outer wall (normal outward)
+    for (int i = 0; i < n; i++) {
+      int j = (i + 1) % n;
+      double a = 2 * Math.PI * i / n;
+      float nx = (float) Math.cos(a), ny = (float) Math.sin(a);
+      int b = vCount + 1;
+      emitVertex(outer[i][0], outer[i][1], z0);
+      emitVertex(outer[j][0], outer[j][1], z0);
+      emitVertex(outer[j][0], outer[j][1], z1);
+      emitVertex(outer[i][0], outer[i][1], z1);
+      emitNormal(nx, ny, 0);
+      int nIdx = nCount;
+      face(b, b + 1, b + 2, nIdx);
+      face(b, b + 2, b + 3, nIdx);
+    }
+    // inner wall (normal inward)
+    for (int i = 0; i < n; i++) {
+      int j = (i + 1) % n;
+      double a = 2 * Math.PI * i / n;
+      float nx = -(float) Math.cos(a), ny = -(float) Math.sin(a);
+      int b = vCount + 1;
+      emitVertex(inner[j][0], inner[j][1], z0);
+      emitVertex(inner[i][0], inner[i][1], z0);
+      emitVertex(inner[i][0], inner[i][1], z1);
+      emitVertex(inner[j][0], inner[j][1], z1);
+      emitNormal(nx, ny, 0);
+      int nIdx = nCount;
+      face(b, b + 1, b + 2, nIdx);
+      face(b, b + 2, b + 3, nIdx);
+    }
+  }
+
   /** Flat filled circle at z = cz facing +Z. */
   public void disc(float cx, float cy, float cz, float r, int segments) {
     List<float[]> profile = circle(cx, cy, r, segments);
