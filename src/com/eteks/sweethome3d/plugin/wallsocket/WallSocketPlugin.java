@@ -62,9 +62,10 @@ public class WallSocketPlugin extends Plugin {
       Content icon = new ResourceURLContent(WallSocketPlugin.class, "socket.png");
 
       HomePieceOfFurniture piece = new HomePieceOfFurniture(new CatalogPieceOfFurniture(
-          null, result.name, null, icon, model,
+          null, SocketModel.name(config), null, icon, model,
           result.width, result.depth, result.height, 110f, true, null,
           System.getProperty("user.name"), true, null, null));
+      SocketModel.applyMetadata(piece, config);
 
       UndoableEditSupport undoSupport = getUndoableEditSupport();
       undoSupport.beginUpdate();
